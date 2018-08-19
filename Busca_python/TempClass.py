@@ -1,31 +1,10 @@
-from src import vrep
-#from src import vrepConst
-# Make sure to have the server side running in V-REP:
-# in a child script of a V-REP scene, add following command
-# to be executed just once, at simulation start:
-#
-# simRemoteApi.start(19999)
-#
-# then start simulation, and run this program.
-#
-# IMPORTANT: for each successful call to simxStart, there
-# should be a corresponding call to simxFinish at the end!
-
-
-# Variaveis robo
-VEL_MOT = 4.25 #tecnicamente em rad/s
-DIS_RETO = 0.05 #tamanho do passo em m ate inicio da leitura dos sensores
-DIS_CURVA = 0.262 #delta para virar PI, ja que ha o delay de comunicacao e eh float, nunca igual, (~VEL_MOT/(7.5PI)) - aleatorio
-D_ANG = 0.1 #delta para captacao de salto da atan, (~DIS_CURVA-0.1)
-MAX_INTE = 0.2 #delta para media ta intensidade. tecnicamente, deve ser zero
-CONT = 0 #contador para comecar virar
-
+from Robot import Robot
 
 import time
 
-print ('Program started')
-vrep.simxFinish(-1) # just in case, close all opened connections
-clientID=vrep.simxStart('127.0.0.1',19997,True,True,5000,5) # Connect to V-REP
+#print ('Program started')
+#vrep.simxFinish(-1) # just in case, close all opened connections
+#clientID=vrep.simxStart('127.0.0.1',19997,True,True,5000,5) # Connect to V-REP
 if clientID!=-1:
 	print ('Connected to remote API server')
 
