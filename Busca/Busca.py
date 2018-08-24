@@ -38,8 +38,8 @@ def estados_possiveis(estado, movimentos_possiveis):
 
         # Pode andar para frente
         if '8' in movimentos_possiveis:
-                novo_x = x;
-                novo_y = y;
+                novo_x = x
+                novo_y = y
 
                 if d == 'W':
                         novo_y = y-1
@@ -54,7 +54,7 @@ def estados_possiveis(estado, movimentos_possiveis):
 
         # Pode rotacionar para esquerda
         if '4' in movimentos_possiveis:
-                nova_direcao = d;
+                nova_direcao = d
                 
                 if d == 'W':
                         nova_direcao = 'A'
@@ -69,7 +69,7 @@ def estados_possiveis(estado, movimentos_possiveis):
 
         # Pode rotacionar para direita
         if '6' in movimentos_possiveis:
-                nova_direcao = d;
+                nova_direcao = d
 
                 if d == 'W':
                         nova_direcao = 'D'
@@ -84,30 +84,29 @@ def estados_possiveis(estado, movimentos_possiveis):
                 
         return estados
 
-def construir_grafo(estadoInicial):
+def busca_largura(estadoInicial, estadoFinal):
         grafo = dict()
         estadoAtual = estadoInicial
         pendentes = [estadoInicial]
         visitados = set()
 
         while pendentes:
+                if estadoAtual == estadoFinal:
+                        # TODO: retornar o caminho
+                        return 'achei, visitando ', len(visitados), ' estados'
                 if estadoAtual not in visitados:
                         visitados.add(estadoAtual)
                         transicoes = transicoes_possiveis(estadoAtual)
                         grafo[estadoAtual] = transicoes
                         pendentes.extend(list(transicoes))
-                estadoAtual = pendentes.pop()
-        return grafo
+
+                estadoAtual = pendentes.pop(0)
+        return 'não achei...'
         
 # Representação do estado
 # (x,     y,     d        )
 # ([0 9], [0 9], {W,A,S,D})
 estadoInicial = (9,9,'W')
-estadoFinal = (8,2,'S')
+estadoFinal = (10,10,'S')
 
-# Caminhos que já foram visitados
-visitados = set(estadoInicial)
-# Caminho planejado
-caminho = []
-
-print(construir_grafo(estadoInicial))
+print(busca_largura(estadoInicial, estadoFinal))
