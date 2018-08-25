@@ -55,6 +55,7 @@ def gerar_planejamento(destino):
                 acoes.append(determinar_acao(origem, destino))
                 origem = destino
 
+        print("*** Tamanho do caminho encontrado: {tamanho} passos".format(tamanho=len(acoes)))
         print("Planejamento gerado: {planejamento}".format(planejamento=acoes))
         print("")
         return acoes
@@ -158,6 +159,8 @@ def busca_largura(origem, destino):
                                 transicaoNo = Node(transicao, noAtual)
                                 
                                 if transicao == destino:
+                                        visitados.add(noAtual.data)
+                                        print("*** {avaliados} estados avaliados".format(avaliados=len(visitados)))
                                         return gerar_planejamento(transicaoNo)
                                 
                                 pendentes.append(transicaoNo)
