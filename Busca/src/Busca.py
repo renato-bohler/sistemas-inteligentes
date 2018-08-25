@@ -1,4 +1,5 @@
 from Node import Node
+from RobotControl import RobotControl
 
 # Representação do estado
 # (x,     y,     d        )
@@ -17,13 +18,13 @@ def determinar_acao(origem, destino):
 
         if (delta_y == -1 and d_origem == 'W' and d_destino == 'W') or (delta_x == -1 and d_origem == 'A' and d_destino == 'A') or (delta_y == -1 and d_origem == 'S' and d_destino == 'S') or (delta_x == 1 and d_origem == 'D' and d_destino == 'D'):
                 # Mover para frente
-                return '8'
+                return 'straight'
         elif (d_origem == 'W' and d_destino == 'A') or (d_origem == 'A' and d_destino == 'S') or (d_origem == 'S' and d_destino == 'D') or (d_origem == 'D' and d_destino == 'W'):
                 # Rotacionar para esquerda
-                return '4'
+                return 'left'
         elif (d_origem == 'W' and d_destino == 'D') or (d_origem == 'D' and d_destino == 'S') or (d_origem == 'S' and d_destino == 'A') or (d_origem == 'A' and d_destino == 'W'):
                 # Rotacionar para direita
-                return '6'
+                return 'right'
 
         raise Exception('Os estados {origem} e {destino} não são adjacentes'.format(origem=origem, destino=destino))
 
@@ -36,6 +37,8 @@ def determinar_caminho(destino):
                 caminho.insert(0, noAtual.parent.data)
                 noAtual = noAtual.parent
         
+        print("Caminho gerado: {caminho}".format(caminho=caminho))
+        print("")
         return caminho
 
 # Recebe o nó destino e retorna a sequência de ações para alcançá-lo
@@ -52,11 +55,13 @@ def gerar_planejamento(destino):
                 acoes.append(determinar_acao(origem, destino))
                 origem = destino
 
+        print("Planejamento gerado: {planejamento}".format(planejamento=acoes))
+        print("")
         return acoes
 
 # Recebe um estado e retorna uma lista com todas as transições possíveis para ele
 def transicoes_possiveis(estado):
-        movimentos_possiveis = set(['8', '4', '6'])
+        movimentos_possiveis = set(['straight', 'left', 'right'])
         
         x = estado[0]
         y = estado[1]
@@ -64,21 +69,21 @@ def transicoes_possiveis(estado):
 
         # Limites do mapa
         if (y == 0 and d == 'W') or (x == 0 and d == 'A') or (y == 9 and d == 'S') or (x == 9 and d == 'D'):
-                movimentos_possiveis.remove('8')
+                movimentos_possiveis.remove('straight')
 
         # Obstruções do mapa
 
         # Parte inferior da obstrução
         if x >= 4 and y == 6 and d == 'W':
-                movimentos_possiveis.remove('8')
+                movimentos_possiveis.remove('straight')
 
         # Parte lateral da obstrução
         if x == 3 and y == 5 and d == 'D':
-                movimentos_possiveis.remove('8')
+                movimentos_possiveis.remove('straight')
 
         # Parte superior da obstrução
         if x >= 4 and y == 4 and d == 'S':
-                movimentos_possiveis.remove('8')
+                movimentos_possiveis.remove('straight')
 
         return estados_possiveis(estado, movimentos_possiveis)
 
@@ -91,7 +96,7 @@ def estados_possiveis(estado, movimentos_possiveis):
         d = estado[2]
 
         # Pode andar para frente
-        if '8' in movimentos_possiveis:
+        if 'straight' in movimentos_possiveis:
                 novo_x = x
                 novo_y = y
 
@@ -107,7 +112,7 @@ def estados_possiveis(estado, movimentos_possiveis):
                 estados.add((novo_x, novo_y, d))
 
         # Pode rotacionar para esquerda
-        if '4' in movimentos_possiveis:
+        if 'left' in movimentos_possiveis:
                 nova_direcao = d
                 
                 if d == 'W':
@@ -122,7 +127,7 @@ def estados_possiveis(estado, movimentos_possiveis):
                 estados.add((x,y,nova_direcao))
 
         # Pode rotacionar para direita
-        if '6' in movimentos_possiveis:
+        if 'right' in movimentos_possiveis:
                 nova_direcao = d
 
                 if d == 'W':
@@ -161,4 +166,28 @@ def busca_largura(origem, destino):
 
         raise Exception('O estado {destino} não é alcançável a partir de {origem}'.format(origem=origem, destino=destino))
 
-print(busca_largura(estadoInicial, estadoFinal))
+# Executa as ações do planejamento dado
+def executar_planejamento(planejamento):
+        robot_control = RobotControl()
+
+        while planejamento and robot_control.simulator.isConnected():
+                acao = planejamento.pop(0)
+
+                if acao == 'straight':
+                        print("Seguindo em frente...")
+                elif acao == 'left':
+                        print("Virando para a esquerda...")
+                elif acao == 'right':
+                        print("Virando para a direita...")
+
+                robot_control.run(acao)
+        
+        print("Planejamento executado")
+        print("")
+        robot_control.simulator.close()
+
+print("Origem: {origem}".format(origem=estadoInicial))
+print("Destino: {destino}".format(destino=estadoFinal))
+print("")
+planejamento = busca_largura(estadoInicial, estadoFinal)
+executar_planejamento(planejamento)

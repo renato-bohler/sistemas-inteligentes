@@ -105,12 +105,12 @@ class RobotControl:
 
 			time.sleep(5 / 1000.0)
 
-			if (object_in_front):
-				print("objeto ", detected_object_middle_ultrasonic, " na posicao ",
-				      detected_object_handle_middle_ultrasonic[0], ", ", detected_object_middle_ultrasonic[1],
-				      ", ", detected_object_middle_ultrasonic[2])
-				print("superficie em ", detected_surface_middle_ultrasonic[0], ", ",
-				      detected_surface_middle_ultrasonic[1], ", ", detected_surface_middle_ultrasonic[2])
+			# if (object_in_front):
+				# print("objeto ", detected_object_middle_ultrasonic, " na posicao ",
+				#       detected_object_handle_middle_ultrasonic[0], ", ", detected_object_middle_ultrasonic[1],
+				#       ", ", detected_object_middle_ultrasonic[2])
+				# print("superficie em ", detected_surface_middle_ultrasonic[0], ", ",
+				#       detected_surface_middle_ultrasonic[1], ", ", detected_surface_middle_ultrasonic[2])
 
 		while self.isInCrossing(self.robot) is False and object_in_front is False:
 
@@ -158,12 +158,12 @@ class RobotControl:
 
 			object_in_front, detected_object_middle_ultrasonic, detected_object_handle_middle_ultrasonic, detected_surface_middle_ultrasonic \
 				= self.robot.readProximitySensor(self.robot.components.ultrasonic['Middle_ultrasonic'])
-			if (object_in_front):
-				print("objeto ", detected_object_middle_ultrasonic, " na posicao ",
-				      detected_object_handle_middle_ultrasonic[0], ", ", detected_object_middle_ultrasonic[1],
-				      ", ", detected_object_middle_ultrasonic[2])
-				print("superficie em ", detected_surface_middle_ultrasonic[0], ", ",
-				      detected_surface_middle_ultrasonic[1], ", ", detected_surface_middle_ultrasonic[2])
+			# if (object_in_front):
+				# print("objeto ", detected_object_middle_ultrasonic, " na posicao ",
+				#       detected_object_handle_middle_ultrasonic[0], ", ", detected_object_middle_ultrasonic[1],
+				#       ", ", detected_object_middle_ultrasonic[2])
+				# print("superficie em ", detected_surface_middle_ultrasonic[0], ", ",
+				#       detected_surface_middle_ultrasonic[1], ", ", detected_surface_middle_ultrasonic[2])
 
 		# extApi_sleepMs(5)
 		# time.sleep(5 / 1000.0)
@@ -186,12 +186,12 @@ class RobotControl:
 			# extApi_sleepMs(5)
 			# time.sleep(5 / 1000.0)
 
-			if (object_in_front):
-				print("objeto ", detected_object_middle_ultrasonic, " na posicao ",
-				      detected_object_middle_ultrasonic[0], ", ", detected_object_middle_ultrasonic[1],
-				      ", ", detected_object_middle_ultrasonic[2])
-				print("superficie em ", detected_surface_middle_ultrasonic[0], ", ",
-				      detected_surface_middle_ultrasonic[1], ", ", detected_surface_middle_ultrasonic[2])
+			# if (object_in_front):
+				# print("objeto ", detected_object_middle_ultrasonic, " na posicao ",
+				#       detected_object_middle_ultrasonic[0], ", ", detected_object_middle_ultrasonic[1],
+				#       ", ", detected_object_middle_ultrasonic[2])
+				# print("superficie em ", detected_surface_middle_ultrasonic[0], ", ",
+				#      detected_surface_middle_ultrasonic[1], ", ", detected_surface_middle_ultrasonic[2])
 
 	def turnRight(self):
 

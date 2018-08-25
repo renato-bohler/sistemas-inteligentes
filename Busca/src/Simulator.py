@@ -9,12 +9,10 @@ class Simulator:
 		self.command_on_server = {}
 
 	def connect(self):
-		print('Program started')
 		vrep.simxFinish(-1)
 		self.clientID = vrep.simxStart('127.0.0.1', 19997, True, True, 5000, 5)
 		if self.clientID == -1:
-			raise RuntimeError('Error connectiong to server')
-
+			raise RuntimeError('Error connecting to server')
 		return self.clientID
 
 
