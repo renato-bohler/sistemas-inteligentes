@@ -3,7 +3,7 @@ import struct
 import sys
 import os
 import ctypes as ct
-from src.vrepConst import *
+from vrepConst import *
 
 #load library
 libsimx = None
@@ -947,7 +947,7 @@ def simxGetStringSignal(clientID, signalName, operationMode):
     Please have a look at the function description/documentation in the V-REP user manual
     '''
 
-    signalLength = ct.c_int();
+    signalLength = ct.c_int()
     signalValue = ct.POINTER(ct.c_ubyte)()
     if (sys.version_info[0] == 3) and (type(signalName) is str):
         signalName=signalName.encode('utf-8')
@@ -967,7 +967,7 @@ def simxGetAndClearStringSignal(clientID, signalName, operationMode):
     Please have a look at the function description/documentation in the V-REP user manual
     '''
 
-    signalLength = ct.c_int();
+    signalLength = ct.c_int()
     signalValue = ct.POINTER(ct.c_ubyte)()
     if (sys.version_info[0] == 3) and (type(signalName) is str):
         signalName=signalName.encode('utf-8')
@@ -987,7 +987,7 @@ def simxReadStringStream(clientID, signalName, operationMode):
     Please have a look at the function description/documentation in the V-REP user manual
     '''
 
-    signalLength = ct.c_int();
+    signalLength = ct.c_int()
     signalValue = ct.POINTER(ct.c_ubyte)()
     if (sys.version_info[0] == 3) and (type(signalName) is str):
         signalName=signalName.encode('utf-8')
@@ -1254,7 +1254,7 @@ def simxQuery(clientID, signalName, signalValue, retSignalName, timeOutInMs):
     Please have a look at the function description/documentation in the V-REP user manual
     '''
 
-    retSignalLength = ct.c_int();
+    retSignalLength = ct.c_int()
     retSignalValue = ct.POINTER(ct.c_ubyte)()
 
     sigV=signalValue
