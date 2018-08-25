@@ -1,4 +1,58 @@
+from Node import Node
+
+# Representação do estado
+# (x,     y,     d        )
+# ([0 9], [0 9], {W,A,S,D})
+estadoInicial = (9,9,'W')
+estadoFinal = (8,2,'S')
+
 # Funções
+
+# Recebe dois estados adjacentes e determina a ação necessária para realizar a transição
+def determinar_acao(origem, destino):        
+        delta_x = destino[0] - origem[0]
+        delta_y = destino[1] - origem[1]
+        d_origem = origem[2]
+        d_destino = destino[2]
+
+        if (delta_y == -1 and d_origem == 'W' and d_destino == 'W') or (delta_x == -1 and d_origem == 'A' and d_destino == 'A') or (delta_y == -1 and d_origem == 'S' and d_destino == 'S') or (delta_x == 1 and d_origem == 'D' and d_destino == 'D'):
+                # Mover para frente
+                return '8'
+        elif (d_origem == 'W' and d_destino == 'A') or (d_origem == 'A' and d_destino == 'S') or (d_origem == 'S' and d_destino == 'D') or (d_origem == 'D' and d_destino == 'W'):
+                # Rotacionar para esquerda
+                return '4'
+        elif (d_origem == 'W' and d_destino == 'D') or (d_origem == 'D' and d_destino == 'S') or (d_origem == 'S' and d_destino == 'A') or (d_origem == 'A' and d_destino == 'W'):
+                # Rotacionar para direita
+                return '6'
+
+        raise Exception('Os estados {origem} e {destino} não são adjacentes'.format(origem=origem, destino=destino))
+
+# Recebe o nó destino e retorna a sequência de estados adjacentes da raiz até ele
+def determinar_caminho(destino):
+        caminho = [destino.data]
+
+        noAtual = destino
+        while noAtual.parent != None:
+                caminho.insert(0, noAtual.parent.data)
+                noAtual = noAtual.parent
+        
+        return caminho
+
+# Recebe o nó destino e retorna a sequência de ações para alcançá-lo
+def gerar_planejamento(destino):
+        acoes = []
+        caminho = determinar_caminho(destino)
+        
+        if len(caminho) < 2:
+                return acoes
+
+        origem = caminho.pop(0)
+        while caminho:
+                destino = caminho.pop(0)
+                acoes.append(determinar_acao(origem, destino))
+                origem = destino
+
+        return acoes
 
 # Recebe um estado e retorna uma lista com todas as transições possíveis para ele
 def transicoes_possiveis(estado):
@@ -84,29 +138,27 @@ def estados_possiveis(estado, movimentos_possiveis):
                 
         return estados
 
-def busca_largura(estadoInicial, estadoFinal):
-        grafo = dict()
-        estadoAtual = estadoInicial
-        pendentes = [estadoInicial]
+# Realiza a busca em largura, retornando uma sequência de passos para atingir o destino a partir da origem
+def busca_largura(origem, destino):
+        # Raíz da árvore
+        noAtual = Node(origem, None)
+        pendentes = [noAtual]
         visitados = set()
 
         while pendentes:
-                if estadoAtual == estadoFinal:
-                        # TODO: retornar o caminho
-                        return 'achei, visitando ', len(visitados), ' estados'
-                if estadoAtual not in visitados:
-                        visitados.add(estadoAtual)
-                        transicoes = transicoes_possiveis(estadoAtual)
-                        grafo[estadoAtual] = transicoes
-                        pendentes.extend(list(transicoes))
+                noAtual = pendentes.pop(0)
+                if noAtual.data not in visitados:
+                        transicoes = transicoes_possiveis(noAtual.data)
+                        for transicao in transicoes:
+                                transicaoNo = Node(transicao, noAtual)
+                                
+                                if transicao == destino:
+                                        return gerar_planejamento(transicaoNo)
+                                
+                                pendentes.append(transicaoNo)
 
-                estadoAtual = pendentes.pop(0)
-        return 'não achei...'
-        
-# Representação do estado
-# (x,     y,     d        )
-# ([0 9], [0 9], {W,A,S,D})
-estadoInicial = (9,9,'W')
-estadoFinal = (10,10,'S')
+                        visitados.add(noAtual.data)
+
+        raise Exception('O estado {destino} não é alcançável a partir de {origem}'.format(origem=origem, destino=destino))
 
 print(busca_largura(estadoInicial, estadoFinal))
