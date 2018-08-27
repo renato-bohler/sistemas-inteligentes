@@ -24,15 +24,18 @@ def heuristic(a, b):
 def A_Star_search(start, goal):
 	origin = Node(start, None)
 	openNodes = [[origin, 0]]
+	visitedNodes = 0
 	cost_so_far  = {}
 	cost_so_far[repr(start)] = 0
 
 	while openNodes:
+		visitedNodes = visitedNodes + 1
 		current = getShortest(openNodes)
 
 		if current.data == goal:
-			planning = Busca.gerar_planejamento(current)
+			print("*** {avaliados} estados avaliados".format(avaliados=visitedNodes))
 			Busca.printPlanning(Busca.determinar_caminho(current))
+			planning = Busca.gerar_planejamento(current)
 			return planning
 
 		neighbors_data = Busca.transicoes_possiveis(current.data)
@@ -44,6 +47,7 @@ def A_Star_search(start, goal):
 				cost_so_far[repr(neighbor_data)] = new_cost
 				heuristic_cost = cost_so_far[repr(current.data)] + heuristic(goal, neighbor_data)
 				openNodes.append([Node(neighbor_data, current),  heuristic_cost])
+
 
 	raise Exception('O estado {destino} não é alcançável a partir de {origem}'.format(origem=start, destino=goal))
 

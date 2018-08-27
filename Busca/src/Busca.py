@@ -29,7 +29,7 @@ def determinar_acao(origem, destino):
         raise Exception('Os estados {origem} e {destino} não são adjacentes'.format(origem=origem, destino=destino))
 
 # Recebe o nó destino e retorna a sequência de estados adjacentes da raiz até ele
-def determinar_caminho(destino):
+def determinar_caminho(destino, printCaminho = True):
         caminho = [destino.data]
 
         noAtual = destino
@@ -37,8 +37,9 @@ def determinar_caminho(destino):
                 caminho.insert(0, noAtual.parent.data)
                 noAtual = noAtual.parent
         
-        print("Caminho gerado: {caminho}".format(caminho=caminho))
-        print("")
+        if printCaminho == True:
+                print("Caminho gerado: {caminho}".format(caminho=caminho))
+                print()
         return caminho
 
 def printPlanning(planning):
@@ -63,7 +64,7 @@ def printPlanning(planning):
 # Recebe o nó destino e retorna a sequência de ações para alcançá-lo
 def gerar_planejamento(destino):
         acoes = []
-        caminho = determinar_caminho(destino)
+        caminho = determinar_caminho(destino, False)
         
         if len(caminho) < 2:
                 return acoes
@@ -76,7 +77,7 @@ def gerar_planejamento(destino):
 
         print("*** Tamanho do caminho encontrado: {tamanho} passos".format(tamanho=len(acoes)))
         print("Planejamento gerado: {planejamento}".format(planejamento=acoes))
-        print("")
+        print()
         return acoes
 
 # Recebe um estado e retorna uma lista com todas as transições possíveis para ele
@@ -206,14 +207,14 @@ def executar_planejamento(planejamento):
                 robot_control.run(acao)
         
         print("Planejamento executado")
-        print("")
+        print()
         robot_control.simulator.close()
 
 
 def execute():
     print("Origem: {origem}".format(origem=estadoInicial))
     print("Destino: {destino}".format(destino=estadoFinal))
-    print("")
+    print()
     planejamento = busca_largura(estadoInicial, estadoFinal)
     executar_planejamento(planejamento)
 
