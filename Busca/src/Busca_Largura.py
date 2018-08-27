@@ -1,5 +1,5 @@
 # Autores: Davi Boberg e Renato Böhler
-
+import time
 from Node import Node
 from RobotControl import RobotControl
 
@@ -207,6 +207,7 @@ def executar_planejamento(planejamento):
                         print("Virando para a direita...")
 
                 robot_control.run(acao)
+                time.sleep(500 / 1000)
         
         print("Planejamento executado")
         print()
