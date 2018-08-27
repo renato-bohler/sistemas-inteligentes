@@ -2,7 +2,6 @@ from Robot import Robot
 from Simulator import Simulator
 from vrep import *
 import time
-import numpy as np
 
 class RobotControl:
 
@@ -151,7 +150,7 @@ class RobotControl:
 		angle = self.robot.getOrientation()
 		initial_angle = angle[2]
 
-		while (d_ang < (np.pi / 4 - self.robot.DIS_CURVA)): # escapar do estado de verificacao dos sensores
+		while (d_ang < (3.14159265359 / 4 - self.robot.DIS_CURVA)): # escapar do estado de verificacao dos sensores
 
 			self.setMotorSpeeds(self.robot.VEL_MOT / 1.5, -self.robot.VEL_MOT / 1.5)
 
@@ -160,7 +159,7 @@ class RobotControl:
 			ang = angle[2]
 			d_ang = abs(ang - initial_angle)
 			# se houve salto da atan, ignora colocando o salto na posicao normal.Como abs, mas funciona melhor
-			if (d_ang > (np.pi / 2 - self.robot.D_ANG)):
+			if (d_ang > (3.14159265359 / 2 - self.robot.D_ANG)):
 				ang = -ang
 				d_ang = abs(ang - initial_angle)
 
@@ -195,7 +194,7 @@ class RobotControl:
 		angle = self.robot.getOrientation()
 		initial_angle = angle[2]
 
-		while d_ang < (np.pi / 4 - self.robot.DIS_CURVA): # escapar do estado de verificacao dos sensores
+		while d_ang < (3.14159265359 / 4 - self.robot.DIS_CURVA): # escapar do estado de verificacao dos sensores
 			self.setMotorSpeeds(-self.robot.VEL_MOT / 1.5, self.robot.VEL_MOT / 1.5)
 
 			angle = self.robot.getOrientation()
@@ -203,7 +202,7 @@ class RobotControl:
 			ang = angle[2]
 			d_ang = abs(ang - initial_angle)
 			# se houve salto da atan, ignora colocando o salto na posicao normal.Como abs, mas funciona melhor
-			if (d_ang > (np.pi / 2 - self.robot.D_ANG)):
+			if (d_ang > (3.14159265359 / 2 - self.robot.D_ANG)):
 				ang = -ang
 				d_ang = abs(ang - initial_angle)
 			time.sleep(5 / 1000)
