@@ -18,7 +18,7 @@ def determinar_acao(origem, destino):
         d_origem = origem[2]
         d_destino = destino[2]
 
-        if (delta_y == -1 and d_origem == 'W' and d_destino == 'W') or (delta_x == -1 and d_origem == 'A' and d_destino == 'A') or (delta_y == -1 and d_origem == 'S' and d_destino == 'S') or (delta_x == 1 and d_origem == 'D' and d_destino == 'D'):
+        if (delta_y == -1 and d_origem == 'W' and d_destino == 'W') or (delta_x == -1 and d_origem == 'A' and d_destino == 'A') or (delta_y == 1 and d_origem == 'S' and d_destino == 'S') or (delta_x == 1 and d_origem == 'D' and d_destino == 'D'):
                 # Mover para frente
                 return 'straight'
         elif (d_origem == 'W' and d_destino == 'A') or (d_origem == 'A' and d_destino == 'S') or (d_origem == 'S' and d_destino == 'D') or (d_origem == 'D' and d_destino == 'W'):
@@ -91,8 +91,16 @@ def transicoes_possiveis(estado):
         d = estado[2]
 
         # Limites do mapa
+        # Não pode sair do mapa
         if (y == 0 and d == 'W') or (x == 0 and d == 'A') or (y == 9 and d == 'S') or (x == 9 and d == 'D'):
                 movimentos_possiveis.remove('straight')
+
+        # Não pode virar pra onde não tem trilha
+        if (y == 0 and d == 'D') or (x == 0 and d == 'W') or (y == 9 and d == 'A') or (x == 9 and d == 'S'):
+                movimentos_possiveis.remove('left')
+        
+        if (y == 0 and d == 'A') or (x == 0 and d == 'S') or (y == 9 and d == 'D') or (x == 9 and d == 'W'):
+                movimentos_possiveis.remove('right')
 
         # Obstruções do mapa
 
