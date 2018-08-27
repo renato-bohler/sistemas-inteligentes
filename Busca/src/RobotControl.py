@@ -3,6 +3,8 @@ from Simulator import Simulator
 from vrep import *
 import time
 
+sleep_time = 5 / 1000
+
 class RobotControl:
 
 	components = {
@@ -63,7 +65,7 @@ class RobotControl:
 			self.turnLeft()
 
 		self.setMotorSpeeds(0, 0)
-		time.sleep(5 / 1000)
+		time.sleep(sleep_time)
 
 	def goStraight(self):
 
@@ -78,7 +80,7 @@ class RobotControl:
 
 			object_in_front, detected_object_middle_ultrasonic, detected_object_handle_middle_ultrasonic, detected_surface_middle_ultrasonic \
 				= self.robot.readProximitySensor(self.robot.components.ultrasonic['Middle_ultrasonic'])
-			time.sleep(20 / 1000)
+			time.sleep(sleep_time)
 
 		while self.isInCrossing(self.robot) is False and object_in_front is False:
 
@@ -124,7 +126,7 @@ class RobotControl:
 				elif (turn_left):
 					self.setMotorSpeeds(self.robot.VEL_MOT / 4, self.robot.VEL_MOT)
 
-			time.sleep(5 / 1000)
+			time.sleep(sleep_time)
 
 		position = self.robot.getPosition()
 		x_inicial = position[0]
@@ -142,7 +144,7 @@ class RobotControl:
 			dx = abs(position[0] - x_inicial)
 			dy = abs(position[1] - y_inicial)
 
-			time.sleep(5/1000)
+			time.sleep(sleep_time)
 
 	def turnRight(self):
 
@@ -163,7 +165,7 @@ class RobotControl:
 				ang = -ang
 				d_ang = abs(ang - initial_angle)
 
-			time.sleep(5 / 1000)
+			time.sleep(sleep_time)
 
 		reading_vision, data_vision = self.robot.readVisionSensor(self.robot.components.vision)
 		intensities = self.robot.visionAvarageIntensity(data_vision)
@@ -178,7 +180,7 @@ class RobotControl:
 			intensities = self.robot.visionAvarageIntensity(data_vision)
 
 			middle_vision = intensities['Middle_Vision_sensor']
-			time.sleep(5 / 1000)
+			time.sleep(sleep_time)
 
 		while not middle_vision: # gira ate os sensores captarem a linha
 			self.setMotorSpeeds(self.robot.VEL_MOT / 1.5, -self.robot.VEL_MOT / 1.5)
@@ -187,7 +189,7 @@ class RobotControl:
 			intensities = self.robot.visionAvarageIntensity(data_vision)
 
 			middle_vision = intensities['Middle_Vision_sensor']
-			time.sleep(5 / 1000)
+			time.sleep(sleep_time)
 
 	def turnLeft(self):
 		d_ang = 0.0
@@ -205,7 +207,7 @@ class RobotControl:
 			if (d_ang > (3.14159265359 / 2 - self.robot.D_ANG)):
 				ang = -ang
 				d_ang = abs(ang - initial_angle)
-			time.sleep(5 / 1000)
+			time.sleep(sleep_time)
 
 		reading_vision, data_vision = self.robot.readVisionSensor(self.robot.components.vision)
 		intensities = self.robot.visionAvarageIntensity(data_vision)
@@ -219,14 +221,14 @@ class RobotControl:
 			intensities = self.robot.visionAvarageIntensity(data_vision)
 
 			middle_vision = intensities['Middle_Vision_sensor']
-			time.sleep(5 / 1000)
+			time.sleep(sleep_time)
 
 		while not middle_vision: #gira ate os sensores captarem a linha
 			self.setMotorSpeeds(-self.robot.VEL_MOT / 1.5, self.robot.VEL_MOT / 1.5)
 			reading_vision, data_vision = self.robot.readVisionSensor(self.robot.components.vision)
 			intensities = self.robot.visionAvarageIntensity(data_vision)
 			middle_vision = intensities['Middle_Vision_sensor']
-			time.sleep(5 / 1000)
+			time.sleep(sleep_time)
 
 	def isWalking(self):
 		if self.isInCrossing(self.robot):
