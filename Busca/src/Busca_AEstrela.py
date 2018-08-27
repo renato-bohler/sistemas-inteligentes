@@ -1,3 +1,5 @@
+# Autores: Davi Boberg e Renato Böhler
+
 from Node import Node
 from RobotControl import RobotControl
 import Busca_Largura
