@@ -42,22 +42,22 @@ def determinar_caminho(destino, printCaminho = True):
                 print()
         return caminho
 
-def printPlanning(planning):
-	i = 0
-	while i <= 9:
-		j = 9
-		while j >= 0:
-			if [True for node in planning if i == node[0] and j == node[1]]:
+def imprimir_caminho(caminho):
+	linha = 0
+	while linha <= 9:
+		coluna = 0
+		while coluna <= 9:
+			if [True for node in caminho if linha == node[1] and coluna == node[0]]:
 				print('o', end='')
-			elif j == 2 and i == 8:
+			elif coluna == 8 and linha == 28:
 				print('g', end='')
-			elif j == 5 and i > 3:
+			elif coluna > 3 and linha == 5:
 				print('x', end='')
 			else:
 				print('-', end='')
 
-			j -= 1
-		i += 1
+			coluna += 1
+		linha += 1
 		print()
 	print()
 
@@ -181,7 +181,7 @@ def busca_largura(origem, destino):
                                 if transicao == destino:
                                         visitados.add(noAtual.data)
                                         print("*** {avaliados} estados avaliados".format(avaliados=len(visitados)))
-                                        printPlanning(determinar_caminho(transicaoNo))
+                                        imprimir_caminho(determinar_caminho(transicaoNo))
                                         return gerar_planejamento(transicaoNo)
                                 
                                 pendentes.append(transicaoNo)

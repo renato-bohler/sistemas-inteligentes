@@ -34,7 +34,7 @@ def A_Star_search(start, goal):
 
 		if current.data == goal:
 			print("*** {avaliados} estados avaliados".format(avaliados=visitedNodes))
-			Busca.printPlanning(Busca.determinar_caminho(current))
+			Busca.imprimir_caminho(Busca.determinar_caminho(current))
 			planning = Busca.gerar_planejamento(current)
 			return planning
 
