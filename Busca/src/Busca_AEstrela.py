@@ -1,6 +1,6 @@
 from Node import Node
 from RobotControl import RobotControl
-import Busca
+import Busca_Largura
 
 # Representação do estado
 # (x,     y,     d        )
@@ -34,11 +34,11 @@ def A_Star_search(start, goal):
 
 		if current.data == goal:
 			print("*** {avaliados} estados avaliados".format(avaliados=visitedNodes))
-			Busca.imprimir_caminho(Busca.determinar_caminho(current))
-			planning = Busca.gerar_planejamento(current)
+			Busca_Largura.imprimir_caminho(Busca_Largura.determinar_caminho(current))
+			planning = Busca_Largura.gerar_planejamento(current)
 			return planning
 
-		neighbors_data = Busca.transicoes_possiveis(current.data)
+		neighbors_data = Busca_Largura.transicoes_possiveis(current.data)
 		for neighbor_data in neighbors_data:
 
 			new_cost = cost_so_far[repr(current.data)] + 1
@@ -56,4 +56,4 @@ print("Origem: {origem}".format(origem=estadoInicial))
 print("Destino: {destino}".format(destino=estadoFinal))
 print("")
 planejamento = A_Star_search(estadoInicial, estadoFinal)
-Busca.executar_planejamento(planejamento)
+Busca_Largura.executar_planejamento(planejamento)
