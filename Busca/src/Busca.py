@@ -1,5 +1,6 @@
 from Node import Node
 from RobotControl import RobotControl
+import time
 
 # Representação do estado
 # (x,     y,     d        )
@@ -41,6 +42,25 @@ def determinar_caminho(destino):
         print("")
         return caminho
 
+def printPlanning(planning):
+	i = 0
+	while i <= 9:
+		j = 9
+		while j >= 0:
+			if [True for node in planning if i == node[0] and j == node[1]]:
+				print('o', end='')
+			elif j == 2 and i == 8:
+				print('g', end='')
+			elif j == 5 and i > 3:
+				print('x', end='')
+			else:
+				print('-', end='')
+
+			j -= 1
+		i += 1
+		print()
+	print()
+
 # Recebe o nó destino e retorna a sequência de ações para alcançá-lo
 def gerar_planejamento(destino):
         acoes = []
@@ -61,7 +81,7 @@ def gerar_planejamento(destino):
 
 # Recebe um estado e retorna uma lista com todas as transições possíveis para ele
 def transicoes_possiveis(estado):
-        movimentos_possiveis = set(['straight', 'left', 'right'])
+        movimentos_possiveis = ['straight', 'left', 'right']
         
         x = estado[0]
         y = estado[1]
@@ -158,6 +178,7 @@ def busca_largura(origem, destino):
                                 transicaoNo = Node(transicao, noAtual)
                                 
                                 if transicao == destino:
+                                        printPlanning(determinar_caminho(transicaoNo))
                                         return gerar_planejamento(transicaoNo)
                                 
                                 pendentes.append(transicaoNo)
@@ -186,8 +207,13 @@ def executar_planejamento(planejamento):
         print("")
         robot_control.simulator.close()
 
-print("Origem: {origem}".format(origem=estadoInicial))
-print("Destino: {destino}".format(destino=estadoFinal))
-print("")
-planejamento = busca_largura(estadoInicial, estadoFinal)
-executar_planejamento(planejamento)
+
+def execute():
+    print("Origem: {origem}".format(origem=estadoInicial))
+    print("Destino: {destino}".format(destino=estadoFinal))
+    print("")
+    planejamento = busca_largura(estadoInicial, estadoFinal)
+    executar_planejamento(planejamento)
+
+if __name__ == '__main__':
+    execute()

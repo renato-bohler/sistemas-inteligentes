@@ -67,7 +67,6 @@ class Robot:
 			sensor_reading[sensor_name] = reading
 			sensor_data[sensor_name] = data
 
-		# print(sensor_data)
 		return sensor_reading, sensor_data
 
 

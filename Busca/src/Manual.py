@@ -26,7 +26,7 @@ while robot_control.simulator.isConnected():
 	command = 0
 
 	while robot_control.isWalking():
-		print('Walking')
+		continue
 	print('Stopped')
 	print(command)
 
