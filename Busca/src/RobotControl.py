@@ -3,7 +3,7 @@ from Simulator import Simulator
 from vrep import *
 import time
 
-sleep_time = 5 / 1000
+sleep_time = 1 / 1000
 
 class RobotControl:
 

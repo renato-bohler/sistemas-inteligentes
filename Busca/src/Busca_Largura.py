@@ -215,7 +215,7 @@ def executar_planejamento(planejamento):
                         print("Virando para a direita...")
 
                 robot_control.run(acao)
-                time.sleep(500 / 1000)
+                time.sleep(1)
         
         print("Planejamento executado")
         print()
