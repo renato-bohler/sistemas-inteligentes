@@ -1,0 +1,38 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/mnt/Documentos/Download/Fabro/ProjetoRemoteApi/main.cpp
+cmath
+-
+iostream
+-
+time.h
+-
+string.h
+-
+boost/interprocess/managed_shared_memory.hpp
+-
+boost/interprocess/offset_ptr.hpp
+-
+remoteApi/extApi.h
+/mnt/Documentos/Download/Fabro/ProjetoRemoteApi/remoteApi/extApi.h
+remoteApi/extApiPlatform.h
+/mnt/Documentos/Download/Fabro/ProjetoRemoteApi/remoteApi/extApiPlatform.h
+
+/mnt/Documentos/Download/Fabro/ProjetoRemoteApi/remoteApi/extApi.h
+extApiPlatform.h
+/mnt/Documentos/Download/Fabro/ProjetoRemoteApi/remoteApi/extApiPlatform.h
+v_repConst.h
+/mnt/Documentos/Download/Fabro/ProjetoRemoteApi/remoteApi/v_repConst.h
+
+/mnt/Documentos/Download/Fabro/ProjetoRemoteApi/remoteApi/extApiPlatform.h
+stdint.h
+-
+
+/mnt/Documentos/Download/Fabro/ProjetoRemoteApi/remoteApi/v_repConst.h
+

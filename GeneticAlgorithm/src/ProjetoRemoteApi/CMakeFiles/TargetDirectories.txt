@@ -1,0 +1,7 @@
+/mnt/Documentos/Download/Fabro/ProjetoRemoteApi/CMakeFiles/install/strip.dir
+/mnt/Documentos/Download/Fabro/ProjetoRemoteApi/CMakeFiles/install/local.dir
+/mnt/Documentos/Download/Fabro/ProjetoRemoteApi/CMakeFiles/cppremoteapi.dir
+/mnt/Documentos/Download/Fabro/ProjetoRemoteApi/CMakeFiles/edit_cache.dir
+/mnt/Documentos/Download/Fabro/ProjetoRemoteApi/CMakeFiles/rebuild_cache.dir
+/mnt/Documentos/Download/Fabro/ProjetoRemoteApi/CMakeFiles/install.dir
+/mnt/Documentos/Download/Fabro/ProjetoRemoteApi/CMakeFiles/list_install_components.dir
