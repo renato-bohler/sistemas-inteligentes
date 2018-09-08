@@ -22,9 +22,6 @@ def penalty(origem, destino):
     x0 = c_destino[0]
     y0 = c_destino[1]
     
-    print("Origem: ({x},{y})".format(x=x,y=y))
-    print("Destino: ({x},{y})".format(x=x0,y=y0))
-
     # Mesmo ponto
     if (x == x0 and y == y0):
         return 0
@@ -44,28 +41,23 @@ def penalty(origem, destino):
     # Demais casos
     # Coeficiente angular
     a = (y - y0) / (x - x0)
-    print("a = {a}".format(a=a))
 
     # Coeficiente linear
     b = y - a * x
-    print("b = {b}".format(b=b))
 
     # Limite 1
     XL1 = (YL1 - b) / a    
     if XL1 >= XL3:
-        print("XL1 = {XL1} >= {XL3} = XL3".format(XL1=XL1,XL3=XL3))
         return penaltyAmount
 
     # Limite 2
     XL2 = (YL2 - b) / a
     if XL2 >= XL3:
-        print("XL2 = {XL2} >= {XL3} = XL3".format(XL2=XL2,XL3=XL3))
         return penaltyAmount
 
     # Limite 3
     YL3 = a * XL3 + b
     if YL1 <= YL3 and YL3 <= YL2:
-        print("YL1 = {YL1} <= {YL3} <= {YL2} = YL2".format(YL1=YL1,YL2=YL2,YL3=YL3))
         return penaltyAmount
     
     return 0
