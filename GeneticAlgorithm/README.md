@@ -1,4 +1,4 @@
-# Busca
+# Algoritmo Genético
 
 ![especificação](especificacao.png)
 
@@ -11,4 +11,3 @@
 
 - Abrir o no V-REP o arquivo `cena.ttt`
 - Iniciar a simulação
-- 
