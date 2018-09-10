@@ -5,6 +5,7 @@ penaltyAmount = 1000
 
 # "Granularidade" de cada quadrado da cena
 divisonsPerUnit = 100
+mapLimit = 9 * divisonsPerUnit
 
 # Limites da parede da cena
 YL1 = 4.5 * divisonsPerUnit
@@ -22,10 +23,14 @@ def penalty(origem, destino):
     x0 = c_destino[0]
     y0 = c_destino[1]
     
+    # Limites do mapa
+    if (x > mapLimit or y > mapLimit or x0 > mapLimit or y0 > mapLimit):
+        return penaltyAmount
+
     # Mesmo ponto
     if (x == x0 and y == y0):
         return 0
-    
+
     # Coeficiente angular infinito
     if (x == x0):
         if (x >= XL3):
