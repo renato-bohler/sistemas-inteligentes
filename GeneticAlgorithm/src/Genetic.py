@@ -36,7 +36,30 @@ class Genetic():
 		y = int(y, 2)
 		return (x,y, direction)
 
-	def __crossover(self, first_chromosome, second_chromosome):
+	def __crossover(self, first_chromosome: tuple, second_chromosome: tuple, only_over_positions=False) -> tuple:
+
+		if only_over_positions:
+			return self.__crossoverOverPosition(first_chromosome, second_chromosome)
+
+		first_chromosome_binary = self.__tupleToBinary(first_chromosome)
+		second_chromosome_binary = self.__tupleToBinary(second_chromosome)
+		chromosome_size = len(first_chromosome_binary)
+		crossover_point = np.random.randint(1, chromosome_size)
+
+		if np.random.choice(2) is 0:
+			new_chromosome = first_chromosome_binary[0: crossover_point] + second_chromosome_binary[crossover_point: chromosome_size]
+			direction = first_chromosome[2]
+		else:
+			new_chromosome = second_chromosome_binary[0: crossover_point] + first_chromosome_binary[crossover_point: chromosome_size]
+			direction = second_chromosome[2]
+
+		return (
+			int(new_chromosome[0:4], 2),
+			int(new_chromosome[4:8], 2),
+			direction
+		)
+
+	def __crossoverOverPosition(self, first_chromosome: tuple, second_chromosome: tuple)-> tuple:
 		number_of_crossover = np.random.randint(1, 3)
 		if number_of_crossover == 1:
 			crossover_point = np.random.randint(1, len(first_chromosome))
@@ -52,15 +75,21 @@ class Genetic():
 			return second_chromosome[0:crossover_point] + first_chromosome[crossover_point:len(first_chromosome)]
 
 
+	def __tupleToBinary(self, tuple_value: tuple):
+		binary = f'{tuple_value[0]:04b}' + f'{tuple_value[1]:04b}'
+		return binary
+
 	def generateNextGeneration(self):
-		scores = self.__evaluatePopulation()
-		new_generation = self.__selection(scores)
+		new_generation = self.__selection(self.scores)
 
 		for index, chromosome in enumerate(new_generation):
+			if self.with_elitism and index is 0:
+				continue
 			mutated = self.__mutation(chromosome)
 			new_generation[index] = mutated
 
 		self.population = new_generation
+		self.scores = self.__evaluatePopulation()
 		return self.population
 
 	def __selection(self, population_score):
@@ -77,7 +106,7 @@ class Genetic():
 			first_chromosome = self.population[first_selected_index]
 			second_chromosome = self.population[second_selected_index]
 
-			new_generation.append(self.__crossover(first_chromosome, second_chromosome))
+			new_generation.append(self.__crossover(first_chromosome, second_chromosome, only_over_positions=False))
 
 		return new_generation
 
@@ -126,7 +155,7 @@ class Genetic():
 		for chromosome in range(self.population_size):
 			population.append(self.__randomChromosome())
 
-		self.__evaluatePopulation(population)
+		self.scores = self.__evaluatePopulation(population)
 		return population
 
 	def __randomChromosome(self):

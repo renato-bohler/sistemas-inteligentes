@@ -1,7 +1,5 @@
 # Autores: Davi Boberg e Renato Böhler
-import time
 from Node import Node
-from RobotControl import RobotControl
 
 # Representação do estado
 # (x,     y,     d        )
@@ -13,36 +11,36 @@ estadoFinal = (8,2,'S')
 
 # Recebe dois estados adjacentes e determina a ação necessária para realizar a transição
 def determinar_acao(origem, destino):        
-        delta_x = destino[0] - origem[0]
-        delta_y = destino[1] - origem[1]
-        d_origem = origem[2]
-        d_destino = destino[2]
+		delta_x = destino[0] - origem[0]
+		delta_y = destino[1] - origem[1]
+		d_origem = origem[2]
+		d_destino = destino[2]
 
-        if (delta_y == -1 and d_origem == 'W' and d_destino == 'W') or (delta_x == -1 and d_origem == 'A' and d_destino == 'A') or (delta_y == 1 and d_origem == 'S' and d_destino == 'S') or (delta_x == 1 and d_origem == 'D' and d_destino == 'D'):
-                # Mover para frente
-                return 'straight'
-        elif (d_origem == 'W' and d_destino == 'A') or (d_origem == 'A' and d_destino == 'S') or (d_origem == 'S' and d_destino == 'D') or (d_origem == 'D' and d_destino == 'W'):
-                # Rotacionar para esquerda
-                return 'left'
-        elif (d_origem == 'W' and d_destino == 'D') or (d_origem == 'D' and d_destino == 'S') or (d_origem == 'S' and d_destino == 'A') or (d_origem == 'A' and d_destino == 'W'):
-                # Rotacionar para direita
-                return 'right'
+		if (delta_y == -1 and d_origem == 'W' and d_destino == 'W') or (delta_x == -1 and d_origem == 'A' and d_destino == 'A') or (delta_y == 1 and d_origem == 'S' and d_destino == 'S') or (delta_x == 1 and d_origem == 'D' and d_destino == 'D'):
+				# Mover para frente
+				return 'straight'
+		elif (d_origem == 'W' and d_destino == 'A') or (d_origem == 'A' and d_destino == 'S') or (d_origem == 'S' and d_destino == 'D') or (d_origem == 'D' and d_destino == 'W'):
+				# Rotacionar para esquerda
+				return 'left'
+		elif (d_origem == 'W' and d_destino == 'D') or (d_origem == 'D' and d_destino == 'S') or (d_origem == 'S' and d_destino == 'A') or (d_origem == 'A' and d_destino == 'W'):
+				# Rotacionar para direita
+				return 'right'
 
-        raise Exception('Os estados {origem} e {destino} não são adjacentes'.format(origem=origem, destino=destino))
+		raise Exception('Os estados {origem} e {destino} não são adjacentes'.format(origem=origem, destino=destino))
 
 # Recebe o nó destino e retorna a sequência de estados adjacentes da raiz até ele
-def determinar_caminho(destino, printCaminho = True):
-        caminho = [destino.data]
+def determinar_caminho(destino, printCaminho = False):
+		caminho = [destino.data]
 
-        noAtual = destino
-        while noAtual.parent != None:
-                caminho.insert(0, noAtual.parent.data)
-                noAtual = noAtual.parent
-        
-        if printCaminho == True:
-                print("Caminho gerado: {caminho}".format(caminho=caminho))
-                print()
-        return caminho
+		noAtual = destino
+		while noAtual.parent != None:
+				caminho.insert(0, noAtual.parent.data)
+				noAtual = noAtual.parent
+
+		if printCaminho == True:
+				print("Caminho gerado: {caminho}".format(caminho=caminho))
+				print()
+		return caminho
 
 def imprimir_caminho(caminho):
 	linha = 0
@@ -63,171 +61,139 @@ def imprimir_caminho(caminho):
 		print()
 	print()
 
-# Recebe o nó destino e retorna a sequência de ações para alcançá-lo
 def gerar_planejamento(destino):
-        acoes = []
-        caminho = determinar_caminho(destino, False)
-        
-        if len(caminho) < 2:
-                return acoes
+		acoes = []
+		caminho = determinar_caminho(destino, False)
 
-        origem = caminho.pop(0)
-        while caminho:
-                destino = caminho.pop(0)
-                acoes.append(determinar_acao(origem, destino))
-                origem = destino
+		if len(caminho) < 2:
+				return acoes
 
-        print("*** Tamanho do caminho encontrado: {tamanho} passos".format(tamanho=len(acoes)))
-        print("Planejamento gerado: {planejamento}".format(planejamento=acoes))
-        print()
-        return acoes
+		origem = caminho.pop(0)
+		while caminho:
+				destino = caminho.pop(0)
+				acoes.append(determinar_acao(origem, destino))
+				origem = destino
+
+		return acoes
 
 # Recebe um estado e retorna uma lista com todas as transições possíveis para ele
 def transicoes_possiveis(estado):
-        movimentos_possiveis = ['straight', 'left', 'right']
-        
-        x = estado[0]
-        y = estado[1]
-        d = estado[2]
+		movimentos_possiveis = ['straight', 'left', 'right']
 
-        # Limites do mapa
-        # Não pode sair do mapa
-        if (y == 0 and d == 'W') or (x == 0 and d == 'A') or (y == 9 and d == 'S') or (x == 9 and d == 'D'):
-                movimentos_possiveis.remove('straight')
+		x = estado[0]
+		y = estado[1]
+		d = estado[2]
 
-        # Não pode virar pra onde não tem trilha
-        if (y == 0 and d == 'D') or (x == 0 and d == 'W') or (y == 9 and d == 'A') or (x == 9 and d == 'S'):
-                movimentos_possiveis.remove('left')
-        
-        if (y == 0 and d == 'A') or (x == 0 and d == 'S') or (y == 9 and d == 'D') or (x == 9 and d == 'W'):
-                movimentos_possiveis.remove('right')
+		# Limites do mapa
+		# Não pode sair do mapa
+		if (y == 0 and d == 'W') or (x == 0 and d == 'A') or (y == 9 and d == 'S') or (x == 9 and d == 'D'):
+				movimentos_possiveis.remove('straight')
 
-        # Obstruções do mapa
+		# Não pode virar pra onde não tem trilha
+		if (y == 0 and d == 'D') or (x == 0 and d == 'W') or (y == 9 and d == 'A') or (x == 9 and d == 'S'):
+				movimentos_possiveis.remove('left')
 
-        # Parte inferior da obstrução
-        if x >= 4 and y == 6 and d == 'W':
-                movimentos_possiveis.remove('straight')
+		if (y == 0 and d == 'A') or (x == 0 and d == 'S') or (y == 9 and d == 'D') or (x == 9 and d == 'W'):
+				movimentos_possiveis.remove('right')
 
-        # Parte lateral da obstrução
-        if x == 3 and y == 5 and d == 'D':
-                movimentos_possiveis.remove('straight')
+		# Obstruções do mapa
 
-        # Parte superior da obstrução
-        if x >= 4 and y == 4 and d == 'S':
-                movimentos_possiveis.remove('straight')
+		# Parte inferior da obstrução
+		if x >= 4 and y == 6 and d == 'W':
+				movimentos_possiveis.remove('straight')
 
-        return estados_possiveis(estado, movimentos_possiveis)
+		# Parte lateral da obstrução
+		if x == 3 and y == 5 and d == 'D':
+				movimentos_possiveis.remove('straight')
 
-# Recebe um estado e uma lista de movimentos possíveis e retorna os estados possíveis
-def estados_possiveis(estado, movimentos_possiveis):        
-        estados = set()
+		# Parte superior da obstrução
+		if x >= 4 and y == 4 and d == 'S':
+				movimentos_possiveis.remove('straight')
 
-        x = estado[0]
-        y = estado[1]
-        d = estado[2]
+		return estados_possiveis(estado, movimentos_possiveis)
 
-        # Pode andar para frente
-        if 'straight' in movimentos_possiveis:
-                novo_x = x
-                novo_y = y
+def estados_possiveis(estado, movimentos_possiveis):
+		estados = set()
 
-                if d == 'W':
-                        novo_y = y-1
-                elif d == 'A':
-                        novo_x = x-1
-                elif d == 'S':
-                        novo_y = y+1
-                elif d == 'D':
-                        novo_x = x+1
+		x = estado[0]
+		y = estado[1]
+		d = estado[2]
 
-                estados.add((novo_x, novo_y, d))
+		# Pode andar para frente
+		if 'straight' in movimentos_possiveis:
+				novo_x = x
+				novo_y = y
 
-        # Pode rotacionar para esquerda
-        if 'left' in movimentos_possiveis:
-                nova_direcao = d
-                
-                if d == 'W':
-                        nova_direcao = 'A'
-                elif d == 'A':
-                        nova_direcao = 'S'
-                elif d == 'S':
-                        nova_direcao = 'D'
-                elif d == 'D':
-                        nova_direcao = 'W'
+				if d == 'W':
+						novo_y = y-1
+				elif d == 'A':
+						novo_x = x-1
+				elif d == 'S':
+						novo_y = y+1
+				elif d == 'D':
+						novo_x = x+1
 
-                estados.add((x,y,nova_direcao))
+				estados.add((novo_x, novo_y, d))
 
-        # Pode rotacionar para direita
-        if 'right' in movimentos_possiveis:
-                nova_direcao = d
+		# Pode rotacionar para esquerda
+		if 'left' in movimentos_possiveis:
+				nova_direcao = d
 
-                if d == 'W':
-                        nova_direcao = 'D'
-                elif d == 'A':
-                        nova_direcao = 'W'
-                elif d == 'S':
-                        nova_direcao = 'A'
-                elif d == 'D':
-                        nova_direcao = 'S'
+				if d == 'W':
+						nova_direcao = 'A'
+				elif d == 'A':
+						nova_direcao = 'S'
+				elif d == 'S':
+						nova_direcao = 'D'
+				elif d == 'D':
+						nova_direcao = 'W'
 
-                estados.add((x,y,nova_direcao))
-                
-        return estados
+				estados.add((x,y,nova_direcao))
 
-# Realiza a busca em largura, retornando uma sequência de passos para atingir o destino a partir da origem
+		# Pode rotacionar para direita
+		if 'right' in movimentos_possiveis:
+				nova_direcao = d
+
+				if d == 'W':
+						nova_direcao = 'D'
+				elif d == 'A':
+						nova_direcao = 'W'
+				elif d == 'S':
+						nova_direcao = 'A'
+				elif d == 'D':
+						nova_direcao = 'S'
+
+				estados.add((x,y,nova_direcao))
+
+		return estados
+
 def busca_largura(origem, destino):
-        # Raíz da árvore
-        noAtual = Node(origem, None)
-        pendentes = [noAtual]
-        visitados = set()
+		# Raíz da árvore
+		noAtual = Node(origem, None)
+		pendentes = [noAtual]
+		visitados = set()
 
-        while pendentes:
-                noAtual = pendentes.pop(0)
-                if noAtual.data not in visitados:
-                        transicoes = transicoes_possiveis(noAtual.data)
-                        for transicao in transicoes:
-                                transicaoNo = Node(transicao, noAtual)
-                                
-                                if transicao == destino:
-                                        visitados.add(noAtual.data)
-                                        print("*** {avaliados} estados avaliados".format(avaliados=len(visitados)))
-                                        imprimir_caminho(determinar_caminho(transicaoNo))
-                                        return gerar_planejamento(transicaoNo)
-                                
-                                pendentes.append(transicaoNo)
+		while pendentes:
+				noAtual = pendentes.pop(0)
+				if noAtual.data not in visitados:
+						transicoes = transicoes_possiveis(noAtual.data)
+						for transicao in transicoes:
+								transicaoNo = Node(transicao, noAtual)
 
-                        visitados.add(noAtual.data)
+								if transicao == destino:
+										visitados.add(noAtual.data)
+										imprimir_caminho(determinar_caminho(transicaoNo))
+										return gerar_planejamento(transicaoNo)
 
-        raise Exception('O estado {destino} não é alcançável a partir de {origem}'.format(origem=origem, destino=destino))
+								pendentes.append(transicaoNo)
 
-# Executa as ações do planejamento dado
-def executar_planejamento(planejamento):
-        robot_control = RobotControl()
+						visitados.add(noAtual.data)
 
-        while planejamento and robot_control.simulator.isConnected():
-                acao = planejamento.pop(0)
+		raise Exception('O estado {destino} não é alcançável a partir de {origem}'.format(origem=origem, destino=destino))
 
-                if acao == 'straight':
-                        print("Seguindo em frente...")
-                elif acao == 'left':
-                        print("Virando para a esquerda...")
-                elif acao == 'right':
-                        print("Virando para a direita...")
-
-                robot_control.run(acao)
-                time.sleep(1)
-        
-        print("Planejamento executado")
-        print()
-        robot_control.simulator.close()
-
-
-def execute():
-    print("Origem: {origem}".format(origem=estadoInicial))
-    print("Destino: {destino}".format(destino=estadoFinal))
-    print()
-    planejamento = busca_largura(estadoInicial, estadoFinal)
-    executar_planejamento(planejamento)
+def search(start_point, end_point):
+	planning = busca_largura(start_point, end_point)
+	return planning
 
 if __name__ == '__main__':
-    execute()
+	search()
