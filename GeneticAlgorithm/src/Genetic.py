@@ -1,3 +1,4 @@
+# Autores: Davi Boberg e Renato Böhler
 import random
 import numpy as np
 import Penalty

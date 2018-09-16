@@ -1,3 +1,4 @@
+# Autores: Davi Boberg e Renato Böhler
 from subprocess import call
 
 class RobotControl():
