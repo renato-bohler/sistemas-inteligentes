@@ -5,7 +5,7 @@ from RobotControl import RobotControl
 
 initial_position = (9, 9, 'W')
 final_position = (8, 2, 'S')
-maximum_generations = 20
+maximum_generations = 50
 
 genetic = Genetic(initial_position, final_position, population_size=20, mutation_probability=0.01, map_size=10, with_elitism=True)
 
