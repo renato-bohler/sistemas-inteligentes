@@ -1,0 +1,105 @@
+FUNCTION_BLOCK
+
+VAR_INPUT
+    centerLeftSensor: REAL;
+    centerRightSensor:  REAL; 
+    leftSensor:  REAL;
+    rightSensor:  REAL;
+    orientation:  REAL;
+END_VAR
+
+VAR_OUTPUT
+    leftWheelVel:  REAL;
+    rightWheelVel:  REAL;
+END_VAR
+
+FUZZIFY centerLeftSensor
+    RANGE := (0.0 .. 2000.0);
+    TERM no_signal := (0, 0) (0, 1) (1, 1) (1, 0);
+    TERM far := (1, 0) (2, 1) (900, 1) (1000, 0);
+    TERM near := (900, 0) (1000, 1) (2000, 1) (2000, 0);
+END_FUZZIFY
+
+FUZZIFY centerRightSensor
+    RANGE := (0.0 .. 2000.0);
+    TERM no_signal := (0, 0) (0, 1) (1, 1) (1, 0);
+    TERM far := (1, 0) (2, 1) (900, 1) (1000, 0);
+    TERM near := (900, 0) (1000, 1) (2000, 1) (2000, 0);
+END_FUZZIFY
+
+FUZZIFY leftSensor
+    RANGE := (0.0 .. 2000.0);
+    TERM no_signal := (0, 0) (0, 1) (1, 1) (1, 0);
+    TERM far := (1, 0) (2, 1) (900, 1) (1000, 0);
+    TERM near := (900, 0) (1000, 1) (2000, 1) (2000, 0);
+END_FUZZIFY
+
+FUZZIFY rightSensor
+    RANGE := (0.0 .. 2000.0);
+    TERM no_signal := (0, 0) (0, 1) (1, 1) (1, 0);
+    TERM far := (1, 0) (2, 1) (900, 1) (1000, 0);
+    TERM near := (900, 0) (1000, 1) (2000, 1) (2000, 0);
+END_FUZZIFY
+
+FUZZIFY orientation
+    RANGE := (-181.0 .. 181.0);
+    TERM left := (-181, 0) (-40, 1) (0, 0);
+    TERM center := (-60, 0) (-20, 1) (20, 1) (60, 0);
+    TERM right := (0, 0) (40, 1) (181, 1);
+END_FUZZIFY
+
+
+DEFUZZIFY leftWheelVel
+    RANGE := (-5.0 .. 5.0);
+    TERM fastReverse := (-5, 0) (-5, 1) (-3.5, 1) (-1, 0);
+    TERM slowReverse := (-4, 0) (-1.5, 1) (0, 1) (0, 0);
+    TERM stopped := (-0.2, 0) (-0.1, 1) (0.1, 1) (0.2, 0);
+    TERM slowForward := (0, 0) (0, 1) (1.5, 1) (4, 0);
+    TERM fastForward := (1, 0) (3.5, 1) (5, 1) (5, 0);
+END_DEFUZZIFY
+
+DEFUZZIFY rightWheelVel
+    RANGE := (-5.0 .. 5.0);
+    TERM fastReverse := (-5, 0) (-5, 1) (-3.5, 1) (-1, 0);
+    TERM slowReverse := (-4, 0) (-1.5, 1) (0, 1) (0, 0);
+    TERM stopped := (-0.2, 0) (-0.1, 1) (0.1, 1) (0.2, 0);
+    TERM slowForward := (0, 0) (0, 1) (1.5, 1) (4, 0);
+    TERM fastForward := (1, 0) (3.5, 1) (5, 1) (5, 0);
+END_DEFUZZIFY
+
+
+
+RULEBLOCK wheelRules
+    AND: MIN;
+    ACCU:MAX;
+
+    RULE 1: IF orientation IS left AND leftSensor IS no_signal AND centerLeftSensor IS no_signal AND centerRightSensor IS no_signal AND rightSensor IS no_signal THEN leftWheelVel IS fastForward AND rightWheelVel IS stopped;
+    RULE 2: IF orientation IS right AND leftSensor IS no_signal AND centerLeftSensor IS no_signal AND centerRightSensor IS no_signal AND rightSensor IS no_signal THEN leftWheelVel IS stopped AND rightWheelVel IS fastForward;
+    RULE 3: IF orientation IS center AND leftSensor IS no_signal AND centerLeftSensor IS no_signal AND centerRightSensor IS no_signal AND rightSensor IS no_signal THEN leftWheelVel IS fastForward AND rightWheelVel IS fastForward;
+    RULE 4: IF leftSensor IS NOT no_signal THEN leftWheelVel IS fastForward;
+    RULE 5: IF leftSensor IS NOT no_signal THEN rightWheelVel IS slowForward;
+    RULE 6: IF centerLeftSensor IS NOT no_signal THEN leftWheelVel IS fastForward;
+    RULE 7: IF centerLeftSensor IS NOT no_signal THEN rightWheelVel IS stopped;
+    RULE 8: IF rightSensor IS NOT no_signal THEN rightWheelVel IS fastForward
+    RULE 9: IF rightSensor IS NOT no_signal THEN leftWheelVel IS slowForward
+    RULE 10: IF centerRightSensor IS NOT no_signal THEN rightWheelVel IS fastForward;
+    RULE 11: IF centerRightSensor IS NOT no_signal THEN leftWheelVel IS stopped;
+    RULE 12: IF leftSensor IS NOT no_signal AND centerLeftSensor IS no_signal THEN leftWheelVel IS fastForward;
+    RULE 13: IF leftSensor IS NOT no_signal AND centerLeftSensor IS no_signal THEN rightWheelVel IS slowForward;
+    RULE 14: IF rightSensor IS NOT no_signal AND centerRightSensor IS no_signal THEN rightWheelVel IS fastForward;
+    RULE 15: IF rightSensor IS NOT no_signal AND centerRightSensor IS no_signal THEN leftWheelVel IS slowForward;
+    RULE 16: IF leftSensor IS NOT no_signal AND centerLeftSensor IS far THEN leftWheelVel IS fastForward;
+    RULE 17: IF leftSensor IS NOT no_signal AND centerLeftSensor IS far THEN rightWheelVel IS slowReverse;
+    RULE 18: IF rightSensor IS NOT no_signal AND centerRightSensor IS far THEN rightWheelVel IS fastForward;
+    RULE 19: IF rightSensor IS NOT no_signal AND centerRightSensor IS far THEN leftWheelVel IS slowReverse;
+    RULE 20: IF leftSensor IS NOT no_signal AND centerLeftSensor IS near THEN leftWheelVel IS fastForward;
+    RULE 21: IF leftSensor IS NOT no_signal AND centerLeftSensor IS near THEN rightWheelVel IS fastReverse;
+    RULE 22: IF rightSensor IS NOT no_signal AND centerRightSensor IS near THEN rightWheelVel IS fastForward;
+    RULE 23: IF rightSensor IS NOT no_signal AND centerRightSensor IS near THEN leftWheelVel IS fastReverse;
+    RULE 24: IF centerLeftSensor IS NOT no_signal AND centerRightSensor IS NOT no_signal AND rightSensor IS NOT no_signal THEN  leftWheelVel IS slowReverse;
+    RULE 25: IF centerLeftSensor IS NOT no_signal AND centerRightSensor IS NOT no_signal AND rightSensor IS NOT no_signal THEN  rightWheelVel IS fastForward;
+    RULE 26: IF centerRightSensor IS NOT no_signal AND centerLeftSensor IS NOT no_signal AND leftSensor IS NOT no_signal THEN leftWheelVel IS fastForward;
+    RULE 27: IF centerRightSensor IS NOT no_signal AND centerLeftSensor IS NOT no_signal AND leftSensor IS NOT no_signal THEN rightWheelVel IS slowReverse;
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK
